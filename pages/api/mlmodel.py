@@ -12,7 +12,7 @@ api_key = os.getenv("ROBOFLOW_KEY")
 # Load your pre-trained model
 CLIENT = InferenceHTTPClient(
     api_url="https://detect.roboflow.com",
-    api_key="GiczgMHxpjIu48t4D8ME"
+    api_key=api_key
 )
 
 

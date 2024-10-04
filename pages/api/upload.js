@@ -49,12 +49,6 @@ const handler = async (req, res) => {
     const fileName = files.file[0].newFilename; // Get the path of the uploaded file
     console.log(fileName)
     try {
-      // console.log("File uploaded successfully.", filePath); // Log a message for testing
-
-      // Dummy ingredient data
-      // const ingredients = { peanuts: 1, dingus: 2 }; // Sample ingredient data
-      // const trueingredients = await runMLModel("./fridge.png");
-      // console.log(trueingredients)
 
       const imagePath = path.join(process.cwd(), 'uploads', fileName);
       // Call the runMLModel function to get ingredients
@@ -66,9 +60,9 @@ const handler = async (req, res) => {
       res.status(500).json({ error: 'Error processing image' });
     } finally {
       // Clean up the file if needed
-      // fs.unlink(filePath, (err) => {
-      //   if (err) console.error('Error deleting file:', err);
-      // });
+      fs.unlink(files.file[0].filepath, (err) => {
+        if (err) console.error('Error deleting file:', err);
+      });
     }
   });
 };
