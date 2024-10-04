@@ -106,7 +106,7 @@ const ImageUpload = () => {
           <ul className="mt-2 space-y-1">
             {Object.entries(ingredients).map(([ingredient, quantity]) => (
               <li key={ingredient} className="text-gray-700">
-                {ingredient.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())}: <span className="font-semibold">{quantity}</span>
+                {ingredient.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())}: <span className="font-semibold">{quantity as string}</span>
               </li>
             ))}
           </ul>
