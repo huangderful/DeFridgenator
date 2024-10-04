@@ -1,12 +1,18 @@
 import sys
 import json
-import os
 from inference_sdk import InferenceHTTPClient
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+api_key = os.getenv("ROBOFLOW_KEY")
 
 # Load your pre-trained model
 CLIENT = InferenceHTTPClient(
     api_url="https://detect.roboflow.com",
-    api_key=os.environ["ROBOFLOW_KEY"]
+    api_key="GiczgMHxpjIu48t4D8ME"
 )
 
 
@@ -29,8 +35,8 @@ def detect_ingredients(image_path):
     return ingredients
 
 if __name__ == "__main__":
-    image_path =  "./fridge.png"# sys.argv[1]  # Get the image path from the arguments
+    image_path =  sys.argv[1]  # Get the image path from the arguments
+    # print(json.dumps({"image_path": image_path}))
     ingredients = detect_ingredients(image_path)
-    print(json.dumps(ingredients))
     # Output the ingredients in JSON format
     print(json.dumps(ingredients))

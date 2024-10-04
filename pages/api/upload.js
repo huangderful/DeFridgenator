@@ -1,6 +1,7 @@
 import { IncomingForm } from 'formidable'; // Updated import
 import fs from 'fs';
-
+import { execFile } from 'child_process';
+import path from 'path';
 // Disable default body parser for multipart form data
 export const config = {
   api: {
@@ -8,10 +9,32 @@ export const config = {
   },
 };
 
+// Define the runMLModel function that calls the Python script
+async function runMLModel(imagePath) {
+  return new Promise((resolve, reject) => {
+    execFile('python', ['./pages/api/mlmodel.py', imagePath], (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error('Error running ML model: ' + error.message));
+        return;
+      }
+      if (stderr) {
+        reject(new Error('ML model stderr: ' + stderr));
+        return;
+      }
+      try {
+        const ingredients = JSON.parse(stdout);  // Parse the JSON output from Python
+        resolve(ingredients);
+      } catch (err) {
+        reject(new Error('Failed to parse ML model output: ' + err.message));
+      }
+    });
+  });
+}
+
 // API route handler
 const handler = async (req, res) => {
     const form = new IncomingForm({
-        uploadDir: '../uploads', // Specify the custom upload directory
+        uploadDir: './uploads', // Specify the custom upload directory
         keepExtensions: true,    // Keep the original file extension
       });
       
@@ -23,15 +46,20 @@ const handler = async (req, res) => {
       return;
     }
 
-    const filePath = files.file[0].filepath; // Get the path of the uploaded file
-    console.log(filePath)
+    const fileName = files.file[0].newFilename; // Get the path of the uploaded file
+    console.log(fileName)
     try {
-      console.log("File uploaded successfully.", filePath); // Log a message for testing
+      // console.log("File uploaded successfully.", filePath); // Log a message for testing
 
       // Dummy ingredient data
-      const ingredients = { peanuts: 1, dingus: 2 }; // Sample ingredient data
-      // const ingredients = await runMLModel(filePath);
-      // Send the dummy ingredient data back in the response
+      // const ingredients = { peanuts: 1, dingus: 2 }; // Sample ingredient data
+      // const trueingredients = await runMLModel("./fridge.png");
+      // console.log(trueingredients)
+
+      const imagePath = path.join(process.cwd(), 'uploads', fileName);
+      // Call the runMLModel function to get ingredients
+      const ingredients = await runMLModel(imagePath);
+      console.log(ingredients.length)
       res.status(200).json({ ingredients });
     } catch (error) {
       console.error('Error processing image:', error);

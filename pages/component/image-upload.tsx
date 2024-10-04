@@ -36,38 +36,53 @@ const ImageUpload = () => {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-4">Upload an image of your fridge</h1>
+    <div className="min-w-fit w-1/2 flex flex-col items-center bg-emerald-50 pl-10 pr-10 pt-10 pb-10 rounded-xl">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Upload an Image of Your Fridge</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="mb-4"
-        />
-        {preview && <img src={preview} alt="Preview" className="mb-4 max-h-96" />}
-        <button
+      <form onSubmit={handleSubmit} className=" bg-white shadow-lg rounded-lg p-6 w-96">
+      <div className="flex flex-col items-center">
+        <label className="w-full flex flex-col items-center bg-blue-500 text-white rounded-lg shadow-lg px-4 py-2 cursor-pointer hover:bg-blue-600 transition-colors duration-200">
+          <span className="">Upload Image</span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden" // Hide the default input
+          />
+        </label>
+
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            className="mt-4 rounded-lg shadow-md max-h-96 object-cover"
+          />
+        )}
+      </div>
+      {preview && (
+          <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className={`w-full py-2 mt-2 text-white rounded-lg transition-colors duration-300 ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
           disabled={isLoading}
         >
-          {isLoading ? 'Processing...' : 'Upload and Detect Ingredients'}
+          {isLoading ? 'Processing...' : 'Defridgerate'}
         </button>
+        )}
+        
       </form>
 
       {Object.keys(ingredients).length > 0 && (
-        <div className="mt-6">
-            <h2 className="text-xl font-semibold">Detected Ingredients:</h2>
-            <ul>
+        <div className="mt-6 w-full max-w-md bg-white shadow-lg rounded-lg p-4">
+          <h2 className="text-xl font-semibold text-gray-800">Detected Ingredients:</h2>
+          <ul className="mt-2 space-y-1">
             {Object.entries(ingredients).map(([ingredient, quantity]) => (
-                <li key={ingredient}>
-                {ingredient}: {quantity}
-                </li>
+              <li key={ingredient} className="text-gray-700">
+                {ingredient.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())}: <span className="font-semibold">{quantity}</span>
+              </li>
             ))}
-            </ul>
+          </ul>
         </div>
-        )}
+      )}
     </div>
   );
 };
