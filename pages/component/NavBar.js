@@ -1,3 +1,4 @@
+// The top bar
 import Link from 'next/link';
 
 const NavBar = () => {

@@ -1,7 +1,6 @@
+// Handler for getting all the recipes based on ingredients
 import { IncomingForm } from 'formidable';
 import axios from 'axios';
-
-// Disable default body parser for multipart form data
 export const config = {
   api: {
     bodyParser: false,
@@ -12,17 +11,11 @@ export const config = {
 async function runRecipes(ingredientString) {
   try {
     const url = 'https://api.spoonacular.com/recipes/findByIngredients';
-    
-    // Prepare the API request parameters
-    console.log(ingredientString[0])
     const params = {
       ingredients: ingredientString[0], // Comma-separated list of ingredients
-      apiKey: process.env.RECIPE_API_KEY, // Get the API key from environment variables
+      apiKey: process.env.RECIPE_API_KEY,
     };
-
-    // Make the GET request to Spoonacular API
     const response = await axios.get(url, { params });
-
     // Extract recipe titles
     const recipes = response.data.map(recipe => recipe.title);
 
@@ -49,7 +42,6 @@ const handler = async (req, res) => {
     try {
       // Call the runRecipes function to get recipes
       const recipes = await runRecipes(ingredientString);
-      console.log('Found recipes:', recipes);
       res.status(200).json({ recipes });
     } catch (error) {
       console.error('Error processing ingredients:', error);

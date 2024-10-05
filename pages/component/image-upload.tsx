@@ -8,6 +8,7 @@ const ImageUpload = () => {
   const [ingredients, setIngredients] = useState({});
   const [recipes, setRecipes] = useState([]);
 
+  //handles when a file is uploaded
   const handleFileChange = (e) => {
     const file = e.target.files[0];
   
@@ -23,7 +24,7 @@ const ImageUpload = () => {
   
     e.target.value = null; // Reset the input value
   };
-
+  //handles when a file is uploaded and ready to be defridged
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedFile) return;
@@ -44,17 +45,18 @@ const ImageUpload = () => {
       setIsLoading(false);
     }
   };
+  // handles when you have the list of ingredients and want recipes
 
   const fetchRecipes = async () => {
     const ingredientString = Object.keys(ingredients).join(','); // Convert ingredients object to a string
-    setIsFetchingRecipes(true); // Set loading state to true
+    setIsFetchingRecipes(true); 
     try {
       const res = await fetch('../api/recipes', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Set correct content type
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({ ingredients: ingredientString }), // Send ingredients as URL encoded params
+        body: new URLSearchParams({ ingredients: ingredientString }), 
       });
       const data = await res.json();
       setRecipes(data.recipes); // Assuming API returns a list of recipes
@@ -77,7 +79,7 @@ const ImageUpload = () => {
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="hidden" // Hide the default input
+              className="hidden" 
             />
           </label>
 
@@ -117,7 +119,7 @@ const ImageUpload = () => {
         <button
           onClick={fetchRecipes}
           className={`mt-4 w-full max-w-md py-2 text-white rounded-lg transition-colors duration-300 ${isFetchingRecipes ? 'bg-gray-400 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-600'}`}
-          disabled={isFetchingRecipes} // Disable button while fetching recipes
+          disabled={isFetchingRecipes} 
         >
           {isFetchingRecipes ? 'Processing...' : 'Get Meal Ideas💡'}
         </button>

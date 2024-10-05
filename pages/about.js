@@ -1,8 +1,7 @@
+//here to show that I know how paages work
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import ImageUpload from './component/image-upload'
 import NavBar from './component/NavBar';
-const YourComponent = () => {
+const About = () => {
   return (
     <div className="bg-gradient-to-b from-emerald-200 bg-teal-200  to-teal-400 min-h-screen bg-fixed">
 
@@ -29,5 +28,5 @@ const YourComponent = () => {
   );
 };
 
-export default YourComponent;
+export default About;
 

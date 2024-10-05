@@ -30,6 +30,7 @@ async function detectIngredients(imageBase64) {
     });
 
     const predictions = response.data.predictions;
+    //0.4 because generally that's what looks right from what I can gather
     const confidenceThreshold = 0.4;
     const ingredients = {};
 
