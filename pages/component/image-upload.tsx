@@ -46,7 +46,7 @@ const ImageUpload = () => {
   };
 
   const fetchRecipes = async () => {
-    const ingredientString = Object.keys(ingredients).join(', '); // Convert ingredients object to a string
+    const ingredientString = Object.keys(ingredients).join(','); // Convert ingredients object to a string
     setIsFetchingRecipes(true); // Set loading state to true
     try {
       const res = await fetch('../api/recipes', {
@@ -116,16 +116,16 @@ const ImageUpload = () => {
       {Object.keys(ingredients).length > 0 && (
         <button
           onClick={fetchRecipes}
-          className={`mt-4 w-full py-2 text-white rounded-lg transition-colors duration-300 ${isFetchingRecipes ? 'bg-gray-400 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-600'}`}
+          className={`mt-4 w-full max-w-md py-2 text-white rounded-lg transition-colors duration-300 ${isFetchingRecipes ? 'bg-gray-400 cursor-not-allowed' : 'bg-violet-500 hover:bg-violet-600'}`}
           disabled={isFetchingRecipes} // Disable button while fetching recipes
         >
-          {isFetchingRecipes ? 'Processing...' : 'Get Recipes'}
+          {isFetchingRecipes ? 'Processing...' : 'Get Meal Ideas💡'}
         </button>
       )}
 
       {recipes.length > 0 && (
         <div className="mt-6 w-full max-w-md bg-white shadow-lg rounded-lg p-4">
-          <h2 className="text-xl font-semibold text-gray-800">Suggested Recipes:</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Meal Ideas:</h2>
           <ul className="mt-2 space-y-1">
             {recipes.map((recipe, index) => (
               <li key={index} className="text-gray-700">{recipe}</li>

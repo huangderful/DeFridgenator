@@ -1,6 +1,5 @@
-import { IncomingForm } from 'formidable'; // Updated import
-import { execFile } from 'child_process';
-import path from 'path';
+import { IncomingForm } from 'formidable';
+import axios from 'axios';
 
 // Disable default body parser for multipart form data
 export const config = {
@@ -9,25 +8,29 @@ export const config = {
   },
 };
 
+// Function to get recipes based on ingredients using Spoonacular API
 async function runRecipes(ingredientString) {
-  return new Promise((resolve, reject) => {
-    execFile('python', ['./pages/api/recipes.py', ingredientString], (error, stdout, stderr) => {
-      if (error) {
-        reject(new Error('Error running recipe model: ' + error.message));
-        return;
-      }
-      if (stderr) {
-        reject(new Error('Recipe model stderr: ' + stderr));
-        return;
-      }
-      try {
-        const recipes = JSON.parse(stdout); // Parse the JSON output from Python
-        resolve(recipes);
-      } catch (err) {
-        reject(new Error('Failed to parse recipe model output: ' + err.message));
-      }
-    });
-  });
+  try {
+    const url = 'https://api.spoonacular.com/recipes/findByIngredients';
+    
+    // Prepare the API request parameters
+    console.log(ingredientString[0])
+    const params = {
+      ingredients: ingredientString[0], // Comma-separated list of ingredients
+      apiKey: process.env.RECIPE_API_KEY, // Get the API key from environment variables
+    };
+
+    // Make the GET request to Spoonacular API
+    const response = await axios.get(url, { params });
+
+    // Extract recipe titles
+    const recipes = response.data.map(recipe => recipe.title);
+
+    return recipes;
+  } catch (error) {
+    console.error('Error fetching recipes:', error.message);
+    throw error;
+  }
 }
 
 // API route handler
@@ -43,8 +46,6 @@ const handler = async (req, res) => {
 
     // Extract the ingredients string from the fields
     const ingredientString = fields.ingredients; // Assuming ingredients are passed as a field
-    console.log('Received ingredients:', ingredientString);
-
     try {
       // Call the runRecipes function to get recipes
       const recipes = await runRecipes(ingredientString);
